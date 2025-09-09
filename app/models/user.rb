@@ -11,6 +11,8 @@ class User < ApplicationRecord
   validates :first_name, :last_name, :role, presence: true
   validates :email, presence: true, uniqueness: true
 
+  has_many :documents
+
   def generate_jwt
     JWT.encode(
       { 
