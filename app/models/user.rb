@@ -15,7 +15,7 @@ class User < ApplicationRecord
     JWT.encode(
       { 
         id: id, 
-        phone_number: phone_number,
+        email: email,
         exp: 30.days.from_now.to_i
       }, 
       Rails.application.credentials.secret_key_base

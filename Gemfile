@@ -39,6 +39,8 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "pry-rails"
 end
 
 gem "devise", "~> 4.9"
@@ -46,4 +48,6 @@ gem "devise", "~> 4.9"
 gem "based_uuid"
 
 gem "jwt", "~> 2.7"
+
+gem "rack-cors"
 
