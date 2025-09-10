@@ -44,6 +44,8 @@ class Api::V1::DocumentsController < ApplicationController
 
   def update
     document = Document.find(params[:id])
+
+    document_update_params[:markdown] = JSON.stringify(document.markdown) if document_update_params[:markdown].blank?
     
     if document.update(document_update_params)
       # Upload the markdown to the document in the background
@@ -103,6 +105,15 @@ class Api::V1::DocumentsController < ApplicationController
     }
     
     render json: payload, status: :ok
+  end
+
+  def restore_version
+    document = Document.find(params[:id])
+    
+    version = document.versions.find(params[:version_id])
+    version.reify
+
+    render json: { message: "Version restored", document: document.attributes }, status: :ok
   end
 
   private

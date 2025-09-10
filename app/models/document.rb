@@ -22,7 +22,8 @@ class Document < ApplicationRecord
     super.merge(
       editors: editors.map(&:attributes),
       can_view: markdown?,
-      page_view_count: page_view_count
+      page_view_count: page_view_count,
+      versions: versions.order(created_at: :desc).limit(10)
     )
   end
 
@@ -34,6 +35,8 @@ class Document < ApplicationRecord
       
       # Generate markdown if the file is a markdown file
       generate_markdown if attachment.blob.content_type == 'text/markdown'
+
+      versions.destroy_all
     end
   end
 
