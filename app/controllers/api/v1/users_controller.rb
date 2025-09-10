@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   def index
-    users = User.search(params[:query])
+    users = User.where(role: :teacher).search(params[:query])
 
     render json: { users: users.map(&:attributes) }
   end
