@@ -1,5 +1,13 @@
 class User < ApplicationRecord
+  include ApplicationHelper
+
+  include PgSearch::Model
+
+  pg_search_scope :search, against: [:first_name, :last_name, :email], using: { trigram: { threshold: 0.1 } }
+
   has_based_uuid prefix: :usr
+
+  has_one_attached :avatar
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -12,6 +20,9 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
 
   has_many :documents
+  has_many :page_views, dependent: :destroy
+
+  after_create :generate_avatar
 
   def generate_jwt
     JWT.encode(
@@ -25,6 +36,24 @@ class User < ApplicationRecord
   end
 
   def attributes
-    super.merge(role: role.humanize)
+    super.merge(role: role.humanize, avatar_url: avatar_url)
+  end
+
+  def avatar_url
+    cdn_for(self.avatar)
+  end
+
+  def full_name
+    "#{self.first_name} #{self.last_name}"
+  end
+
+  private
+
+  def generate_avatar
+    new_avatar_path = LetterAvatar.generate(full_name, 200)
+    
+    self.avatar.attach(io: File.open(new_avatar_path), filename: "#{full_name.parameterize}_#{self.id}.png")
+
+    self.save
   end
 end

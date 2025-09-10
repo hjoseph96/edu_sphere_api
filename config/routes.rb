@@ -5,10 +5,19 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:create, :update]
+      resources :users, only: [:index, :create, :update]
       resources :sessions, only: :create
       resources :documents, only: [:index, :create, :show, :destroy] do
-        member { get :download }
+        member do
+          get :download
+          get :analytics
+          post :add_editors
+        end
+
+        collection do
+          get :user_analytics
+          get :system_analytics
+        end
       end
     end
   end

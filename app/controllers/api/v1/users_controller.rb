@@ -1,5 +1,9 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :authenticate_user!, only: [:create]
+  def index
+    users = User.search(params[:query])
+
+    render json: { users: users.map(&:attributes) }
+  end
 
   def create
     user = User.new(user_params)
