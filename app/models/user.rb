@@ -6,7 +6,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  enum :role, { admin: 0, teacher: 1 }
+  enum :role, { admin: 0, teacher: 1, student: 2 }
 
   validates :first_name, :last_name, :role, presence: true
   validates :email, presence: true, uniqueness: true
@@ -19,8 +19,12 @@ class User < ApplicationRecord
         id: id, 
         email: email,
         exp: 30.days.from_now.to_i
-      }, 
+      },
       Rails.application.credentials.secret_key_base
     )
+  end
+
+  def attributes
+    super.merge(role: role.humanize)
   end
 end

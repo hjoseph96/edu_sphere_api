@@ -51,3 +51,5 @@ gem "jwt", "~> 2.7"
 
 gem "rack-cors"
 
+gem "paper_trail"
+

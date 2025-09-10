@@ -16,3 +16,7 @@ puts "Admin user created"
 puts "Creating teacher user..."
 User.create(email: "teacher@example.com", password: "password", first_name: "Teacher", last_name: "Teacher", role: 1)
 puts "Teacher user created"
+
+puts "Creating student user..."
+User.create(email: "student@example.com", password: "password", first_name: "Student", last_name: "Student", role: 2)
+puts "Student user created"

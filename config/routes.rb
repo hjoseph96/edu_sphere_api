@@ -7,7 +7,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users, only: [:create, :update]
       resources :sessions, only: :create
-      resources :documents, only: [:index, :create, :show]
+      resources :documents, only: [:index, :create, :show, :destroy] do
+        member { get :download }
+      end
     end
   end
 end
