@@ -55,3 +55,7 @@ gem "pg_search"
 gem "letter_avatar", git: "https://github.com/hjoseph96/letter_avatar"
 
 gem "aws-sdk-s3", "~> 1.199"
+
+gem "sidekiq", "~> 8.0"
+
+gem "foreman", "~> 0.88.0"

@@ -6,8 +6,7 @@ class Api::V1::DocumentsController < ApplicationController
         documents = Document.all
     end
 
-
-    render json: { documents: documents.map(&:attributes) }
+    render json: { documents: documents.map(&:attributes), shared_documents: current_user.shared_documents.map(&:attributes) }
   end
 
   def show
@@ -43,6 +42,17 @@ class Api::V1::DocumentsController < ApplicationController
     end
   end
 
+  def update
+    document = Document.find(params[:id])
+    
+    if document.update(document_update_params)
+      # Upload the markdown to the document in the background
+      UploadMarkdownJob.perform_async(document.id)
+    else
+      render json: { errors: document.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   def destroy
     document = Document.find(params[:id])
     
@@ -69,11 +79,16 @@ class Api::V1::DocumentsController < ApplicationController
   def add_editors
     document = Document.find(params[:id])
 
-    document_editors_params[:editors].each do |editor|
+    document_editors_params[:editors].each do |editor| 
+      if document.editors.exists?(id: editor[:user_id])
+        render json: { errors: "User is already an editor" }, status: :unprocessable_entity
+        return
+      end
+
       DocumentEditor.create!(
-        document_id: document.id,
-        user_id: editor[:user_id],
-        role: editor[:role]
+        document_id:  document.id,
+        user_id:      editor[:user_id],
+        role:         editor[:role]
       )
       rescue ActiveRecord::RecordInvalid => e
         render json: { errors: e.message }, status: :unprocessable_entity
@@ -84,7 +99,7 @@ class Api::V1::DocumentsController < ApplicationController
 
     payload = {
       document: document.attributes,
-      editors: document.editors
+      editors: document.editors.map(&:attributes)
     }
     
     render json: payload, status: :ok
@@ -94,6 +109,10 @@ class Api::V1::DocumentsController < ApplicationController
 
   def document_params
     params.require(:documents).permit(files: [:title, :file])
+  end
+
+  def document_update_params
+    params.require(:document).permit(:title, :markdown)
   end
 
   def document_editors_params

@@ -21,6 +21,8 @@ class User < ApplicationRecord
 
   has_many :documents
   has_many :page_views, dependent: :destroy
+  has_many :document_editors, dependent: :destroy
+  has_many :shared_documents, through: :document_editors, source: :document
 
   after_create :generate_avatar
 

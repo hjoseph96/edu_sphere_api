@@ -56,6 +56,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_10_130808) do
 
   create_table "documents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title"
+    t.text "markdown"
     t.uuid "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
