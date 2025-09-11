@@ -1,5 +1,3 @@
-ActiveRecord.use_yaml_unsafe_load = true
-
 require "active_support/time"
 
 if defined?(PaperTrail::Serializers::YAML)
