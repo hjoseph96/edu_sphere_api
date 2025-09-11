@@ -13,7 +13,6 @@ class Document < ApplicationRecord
 
   has_paper_trail
 
-
   def markdown?
     file.content_type == "text/markdown"
   end
@@ -33,10 +32,14 @@ class Document < ApplicationRecord
       # Log the file attachment
       Rails.logger.info "File attached to document #{id}: #{attachment.blob.filename}"
       
-      # Generate markdown if the file is a markdown file
-      generate_markdown if attachment.blob.content_type == 'text/markdown'
 
-      versions.destroy_all
+      if self.markdown.blank? && markdown?
+        # Generate markdown if the file is a markdown file
+        generate_markdown
+        
+        versions.destroy_all
+      end
+
     end
   end
 
