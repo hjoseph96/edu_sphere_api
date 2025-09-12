@@ -10,7 +10,7 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def show
-    document = Document.find(params[:id])
+    document = Document.friendly.find(params[:id])
 
     # Track page view
     PageViewService.track_page_view(
@@ -45,7 +45,7 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def update
-    document = Document.find(params[:id])
+    document = Document.friendly.find(params[:id])
     
     md_content = document_update_params["markdown"]
     document_update_params["markdown"] = md_content.to_json
@@ -61,7 +61,7 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def destroy
-    document = Document.find(params[:id])
+    document = Document.friendly.find(params[:id])
     
     document.destroy
     
@@ -69,13 +69,13 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def download
-    document = Document.find(params[:id])
+    document = Document.friendly.find(params[:id])
     
     send_data document.file.download, filename: document.title
   end
 
   def analytics
-    document = Document.find(params[:id])
+    document = Document.friendly.find(params[:id])
     period = params[:period]&.to_sym || :today
     
     analytics_data = PageViewService.get_analytics_for(document, period: period)
@@ -84,7 +84,7 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def add_editors
-    document = Document.find(params[:id])
+    document = Document.friendly.find(params[:id])
 
     document_editors_params[:editors].each do |editor| 
       if document.editors.exists?(id: editor[:user_id])
@@ -113,7 +113,7 @@ class Api::V1::DocumentsController < ApplicationController
   end
 
   def restore_version
-    document = Document.find(params[:id])
+    document = Document.friendly.find(params[:id])
     
     version = document.versions.find(params[:version_id])
     version.reify

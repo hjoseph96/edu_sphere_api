@@ -80,7 +80,7 @@ GEM
       uri (>= 0.13.1)
     ast (2.4.3)
     aws-eventstream (1.4.0)
-    aws-partitions (1.1157.0)
+    aws-partitions (1.1159.0)
     aws-sdk-core (3.232.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -130,6 +130,8 @@ GEM
     erb (5.0.2)
     erubi (1.13.1)
     foreman (0.88.1)
+    friendly_id (5.5.1)
+      activerecord (>= 4.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.7)
@@ -371,6 +373,7 @@ DEPENDENCIES
   debug
   devise (~> 4.9)
   foreman (~> 0.88.0)
+  friendly_id (~> 5.5.0)
   jwt (~> 2.7)
   kamal
   letter_avatar!
