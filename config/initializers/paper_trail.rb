@@ -1,4 +1,6 @@
-require "active_support/time"
+# frozen_string_literal: true
+
+require 'active_support/time'
 
 if defined?(PaperTrail::Serializers::YAML)
   PaperTrail.serializer = PaperTrail::Serializers::YAML

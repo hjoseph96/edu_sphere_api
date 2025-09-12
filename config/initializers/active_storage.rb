@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.configuration.to_prepare do
   ActiveStorage::Blob.class_eval do
     before_create :generate_key_with_prefix
@@ -8,34 +10,38 @@ Rails.configuration.to_prepare do
 
     def prefix
       case Rails.env
-          when 'development' then 'dev'
-          when 'staging' then 'stage'
-          when 'production' then 'prod'
+      when 'development' then 'dev'
+      when 'staging' then 'stage'
+      when 'production' then 'prod'
       end
     end
   end
 
-  module ActiveStorage::Attachment::Callbacks
-    extend ActiveSupport::Concern
-  
-    prepended do
-      after_commit :attachment_created, on: :create
-      after_commit :attachment_changed, on: :update
-      after_commit :attachment_destroyed, on: :destroy
-    end
-  
-    def attachment_changed
-      record.after_attachment_update(self) if record.respond_to?(:after_attachment_update)
-    end
+  module ActiveStorage
+    module Attachment
+      module Callbacks
+        extend ActiveSupport::Concern
 
-    def attachment_created
-      record.after_attachment_create(self) if record.respond_to?(:after_attachment_create)
-    end
+        prepended do
+          after_commit :attachment_created, on: :create
+          after_commit :attachment_changed, on: :update
+          after_commit :attachment_destroyed, on: :destroy
+        end
 
-    def attachment_destroyed
-      record.after_attachment_destroy(self) if record.respond_to?(:after_attachment_destroy)
+        def attachment_changed
+          record.after_attachment_update(self) if record.respond_to?(:after_attachment_update)
+        end
+
+        def attachment_created
+          record.after_attachment_create(self) if record.respond_to?(:after_attachment_create)
+        end
+
+        def attachment_destroyed
+          record.after_attachment_destroy(self) if record.respond_to?(:after_attachment_destroy)
+        end
+      end
     end
   end
-  
+
   ActiveStorage::Attachment.prepend ActiveStorage::Attachment::Callbacks
 end
