@@ -129,7 +129,8 @@ GEM
     ed25519 (1.4.0)
     erb (5.0.2)
     erubi (1.13.1)
-    foreman (0.88.1)
+    foreman (0.90.0)
+      thor (~> 1.4)
     friendly_id (5.5.1)
       activerecord (>= 4.0.0)
     globalid (1.2.1)
@@ -372,7 +373,7 @@ DEPENDENCIES
   brakeman
   debug
   devise (~> 4.9)
-  foreman (~> 0.88.0)
+  foreman (~> 0.90.0)
   friendly_id (~> 5.5.0)
   jwt (~> 2.7)
   kamal
