@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         member do
           get :download
           get :analytics
+          get :version_history
           post :add_editors
           post :restore_version
         end

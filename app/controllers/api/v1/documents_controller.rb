@@ -54,7 +54,7 @@ class Api::V1::DocumentsController < ApplicationController
       # Upload the markdown to the document in the background
       UploadMarkdownJob.perform_async(document.id)
 
-      render json: { document: document.attributes.merge(versions: document.versions.reverse[0..9]) }, status: :ok
+      render json: { document: document.attributes.merge(versions: document.filtered_versions.reverse[0..9]) }, status: :ok
     else
       render json: { errors: document.errors.full_messages }, status: :unprocessable_entity
     end
