@@ -124,7 +124,9 @@ module Api
         document = Document.friendly.find(params[:id])
 
         version = document.versions.find(params[:version_id])
-        version.reify
+        old_version = version.reify
+
+        document.update(markdown: old_version.markdown, title: old_version.title)
 
         render json: { message: 'Version restored', document: document.attributes }, status: :ok
       end
