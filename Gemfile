@@ -1,27 +1,29 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
 
-ruby "3.4.1"
+source 'https://rubygems.org'
+
+ruby '3.4.1'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2", ">= 8.0.2.1"
+gem 'rails', '~> 8.0.2', '>= 8.0.2.1'
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.1"
+gem 'pg', '~> 1.1'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", ">= 5.0"
+gem 'puma', '>= 5.0'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem 'tzinfo-data', platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem 'bootsnap', require: false
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
-gem "kamal", require: false
+gem 'kamal', require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
-gem "thruster", require: false
+gem 'thruster', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
@@ -31,35 +33,35 @@ gem "thruster", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+  gem 'debug', platforms: %i[mri windows], require: 'debug/prelude'
 
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem "brakeman", require: false
+  gem 'brakeman', require: false
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
-  gem "rubocop-rails-omakase", require: false
+  gem 'rubocop-rails-omakase', require: false
 
-  gem "pry-rails"
+  gem 'pry-rails'
 end
 
-gem "devise", "~> 4.9"
+gem 'devise', '~> 4.9'
 
-gem "based_uuid"
+gem 'based_uuid'
 
-gem "jwt", "~> 2.7"
+gem 'jwt', '~> 2.7'
 
-gem "rack-cors"
+gem 'rack-cors'
 
-gem "paper_trail"
+gem 'paper_trail'
 
-gem "pg_search"
+gem 'pg_search'
 
-gem "letter_avatar", git: "https://github.com/hjoseph96/letter_avatar"
+gem 'letter_avatar', git: 'https://github.com/hjoseph96/letter_avatar'
 
-gem "aws-sdk-s3", "~> 1.199"
+gem 'aws-sdk-s3', '~> 1.199'
 
-gem "sidekiq", "~> 8.0"
+gem 'sidekiq', '~> 8.0'
 
-gem "foreman", "~> 0.88.0"
+gem 'foreman', '~> 0.88.0'
 
 gem 'friendly_id', '~> 5.5.0'

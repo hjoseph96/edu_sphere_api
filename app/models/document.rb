@@ -118,6 +118,7 @@ class Document < ApplicationRecord
     end
   end
 
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def version_history(options = {})
     threshold = options[:threshold_seconds] || 5
     include_filtered = options[:include_filtered] || false
@@ -154,6 +155,7 @@ class Document < ApplicationRecord
 
     result
   end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   def after_attachment_create(attachment)
     case attachment.name

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePageViews < ActiveRecord::Migration[8.0]
   def change
     create_table :page_views, id: :uuid do |t|
@@ -16,9 +18,9 @@ class CreatePageViews < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :page_views, [:pageviewable_type, :pageviewable_id]
+    add_index :page_views, %i[pageviewable_type pageviewable_id]
     add_index :page_views, :user_id
-    add_index :page_views, [:controller_name, :action_name]
+    add_index :page_views, %i[controller_name action_name]
     add_index :page_views, :created_at
     add_index :page_views, :request_hash
   end

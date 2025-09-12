@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PageView < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :pageviewable, polymorphic: true, optional: true
@@ -28,7 +30,7 @@ class PageView < ApplicationRecord
 
   def self.track!(pageviewable:, user:, controller:, action:, request:, session:, params: {})
     request_hash = Digest::MD5.hexdigest("#{request.remote_ip}-#{request.user_agent}-#{Time.current.to_i}")
-    
+
     create(
       pageviewable: pageviewable,
       user: user,
@@ -41,13 +43,14 @@ class PageView < ApplicationRecord
       params: params.to_json,
       referrer: request.referer
     )
-  rescue
+  rescue StandardError
     # Ignore duplicate requests (same request_hash)
     nil
   end
 
   def params_hash
     return {} if params.blank?
+
     JSON.parse(params)
   rescue JSON::ParserError
     {}

@@ -1,18 +1,24 @@
-class Api::V1::SessionsController < ApplicationController
-    def create
+# frozen_string_literal: true
+
+module Api
+  module V1
+    class SessionsController < ApplicationController
+      def create
         user = User.find_by(email: user_params[:email])
 
-        if user && user.valid_password?(user_params[:password])
-            token = user.generate_jwt
-            render json: { user: user, token: token }, status: :created
+        if user&.valid_password?(user_params[:password])
+          token = user.generate_jwt
+          render json: { user: user, token: token }, status: :created
         else
-            render json: { errors: "Invalid email or password" }, status: :unprocessable_entity
+          render json: { errors: 'Invalid email or password' }, status: :unprocessable_entity
         end
-    end
+      end
 
-    private
+      private
 
-    def user_params
+      def user_params
         params.require(:user).permit(:email, :password)
+      end
     end
+  end
 end

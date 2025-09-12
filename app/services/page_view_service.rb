@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class PageViewService
   def self.track_page_view(pageviewable:, user:, controller:, action:, request:, session:, params: {})
-    return unless pageviewable&.respond_to?(:track_page_view!)
+    return unless pageviewable.respond_to?(:track_page_view!)
 
     pageviewable.track_page_view!(
       user: user,
@@ -13,7 +15,7 @@ class PageViewService
   end
 
   def self.get_analytics_for(pageviewable, period: :today)
-    return {} unless pageviewable&.respond_to?(:page_views)
+    return {} unless pageviewable.respond_to?(:page_views)
 
     {
       total_views: pageviewable.page_view_count,
@@ -26,7 +28,7 @@ class PageViewService
 
   def self.get_user_analytics(user, period: :today)
     user_page_views = PageView.for_user(user).page_views_by_period(period)
-    
+
     {
       total_views: user_page_views.count,
       unique_documents_viewed: user_page_views.distinct.count(:pageview_id),
@@ -37,14 +39,14 @@ class PageViewService
 
   def self.get_system_analytics(period: :today)
     page_views = PageView.page_views_by_period(period)
-    
+
     {
       total_page_views: page_views.count,
       unique_users: page_views.distinct.count(:user_id),
       most_viewed_documents: page_views.group(:pageviewable_type, :pageviewable_id)
-                                      .count
-                                      .sort_by { |_, count| -count }
-                                      .first(10),
+                                       .count
+                                       .sort_by { |_, count| -count }
+                                       .first(10),
       views_by_controller: page_views.group(:controller_name, :action_name).count,
       views_by_hour: page_views.group_by_hour(:created_at).count
     }
