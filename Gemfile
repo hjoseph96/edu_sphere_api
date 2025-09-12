@@ -48,7 +48,7 @@ gem 'devise', '~> 4.9'
 
 gem 'based_uuid'
 
-gem 'jwt', '~> 2.7'
+gem 'jwt', '~> 3.1'
 
 gem 'rack-cors'
 
