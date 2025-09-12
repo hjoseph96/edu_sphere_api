@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Document < ApplicationRecord
   include PageViewable
   include ActiveStorage::Attachment::Callbacks
@@ -5,7 +7,7 @@ class Document < ApplicationRecord
 
   friendly_id :title, use: :slugged
 
-  belongs_to :author, class_name: "User", foreign_key: "user_id"
+  belongs_to :author, class_name: 'User', foreign_key: 'user_id'
 
   has_many :document_editors, dependent: :destroy
   has_many :editors, through: :document_editors, source: :user
@@ -17,7 +19,7 @@ class Document < ApplicationRecord
   has_paper_trail
 
   def markdown?
-    file.content_type == "text/markdown"
+    file.content_type == 'text/markdown'
   end
 
   def attributes
@@ -33,7 +35,7 @@ class Document < ApplicationRecord
 
   # Version filtering methods for handling rapid changes
   # These methods help group and filter versions that occur within a specified time threshold
-  
+
   def sort_versions
     versions.order(created_at: :asc)
   end
@@ -48,9 +50,9 @@ class Document < ApplicationRecord
     (1...all_versions.length).each do |i|
       current_version = all_versions[i]
       previous_version = all_versions[i - 1]
-      
+
       time_diff = current_version.created_at - previous_version.created_at
-      
+
       if time_diff <= threshold_seconds
         # Within threshold, add to current group
         current_group << current_version
@@ -77,9 +79,9 @@ class Document < ApplicationRecord
     (1...all_versions.length).each do |i|
       current_version = all_versions[i]
       previous_version = all_versions[i - 1]
-      
+
       time_diff = current_version.created_at - previous_version.created_at
-      
+
       if time_diff <= threshold_seconds
         # Within threshold, add to current group
         current_group << current_version
@@ -103,7 +105,7 @@ class Document < ApplicationRecord
 
   def version_changes_summary(threshold_seconds: 5)
     groups = grouped_versions(threshold_seconds: threshold_seconds)
-    
+
     groups.map do |group|
       {
         start_time: group.first.created_at,
@@ -120,13 +122,13 @@ class Document < ApplicationRecord
     threshold = options[:threshold_seconds] || 5
     include_filtered = options[:include_filtered] || false
     include_groups = options[:include_groups] || false
-    
+
     result = {
       total_versions: versions.count,
       filtered_versions: significant_versions(threshold_seconds: threshold).count,
       threshold_seconds: threshold
     }
-    
+
     if include_filtered
       result[:filtered_versions_list] = significant_versions(threshold_seconds: threshold).map do |version|
         {
@@ -137,7 +139,7 @@ class Document < ApplicationRecord
         }
       end
     end
-    
+
     if include_groups
       result[:version_groups] = grouped_versions(threshold_seconds: threshold).map do |group|
         {
@@ -149,7 +151,7 @@ class Document < ApplicationRecord
         }
       end
     end
-    
+
     result
   end
 
@@ -158,11 +160,11 @@ class Document < ApplicationRecord
     when 'file'
       # Log the file attachment
       Rails.logger.info "File attached to document #{id}: #{attachment.blob.filename}"
-      
-      if self.markdown.blank? && markdown?
+
+      if markdown.blank? && markdown?
         # Generate markdown if the file is a markdown file
         generate_markdown
-        
+
         versions.destroy_all
       end
 
@@ -172,13 +174,13 @@ class Document < ApplicationRecord
   def upload_markdown
     # Write the markdown to the file
     path = "#{Rails.root}/tmp/storage/#{file.blob.filename}"
-    File.open(path, 'w') { |file| file.write(self.markdown) }
+    File.write(path, markdown)
 
     # Attach the file to the document
-    self.file.attach(io: File.open(path), filename: file.blob.filename)
+    file.attach(io: File.open(path), filename: file.blob.filename)
 
     # Delete the file
-    File.delete(path) if self.save
+    File.delete(path) if save
   end
 
   private
@@ -186,6 +188,6 @@ class Document < ApplicationRecord
   def generate_markdown
     # Download the file and store it in the markdown column
     self.markdown = file.download
-    self.save
+    save
   end
 end
