@@ -21,8 +21,7 @@ class Document < ApplicationRecord
     super.merge(
       editors: editors.map(&:attributes),
       can_view: markdown?,
-      page_view_count: page_view_count,
-      versions: versions.order(created_at: :desc).limit(10)
+      page_view_count: page_view_count
     )
   end
 
@@ -32,7 +31,6 @@ class Document < ApplicationRecord
       # Log the file attachment
       Rails.logger.info "File attached to document #{id}: #{attachment.blob.filename}"
       
-
       if self.markdown.blank? && markdown?
         # Generate markdown if the file is a markdown file
         generate_markdown

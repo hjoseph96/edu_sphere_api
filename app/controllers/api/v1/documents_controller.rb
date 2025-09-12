@@ -23,7 +23,9 @@ class Api::V1::DocumentsController < ApplicationController
       params: params
     )
 
-    render json: { document: document.attributes, file: document.file.download }
+    attrs = document.attributes.merge(versions: document.versions.reverse[0..9])
+
+    render json: { document: attrs, file: document.file.download }
   end
 
   def create
@@ -44,12 +46,15 @@ class Api::V1::DocumentsController < ApplicationController
 
   def update
     document = Document.find(params[:id])
-
-    document_update_params[:markdown] = JSON.stringify(document.markdown) if document_update_params[:markdown].blank?
+    
+    md_content = document_update_params["markdown"]
+    document_update_params["markdown"] = md_content.to_json
     
     if document.update(document_update_params)
       # Upload the markdown to the document in the background
       UploadMarkdownJob.perform_async(document.id)
+
+      render json: { document: document.attributes.merge(versions: document.versions.reverse[0..9]) }, status: :ok
     else
       render json: { errors: document.errors.full_messages }, status: :unprocessable_entity
     end

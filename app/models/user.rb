@@ -27,7 +27,7 @@ class User < ApplicationRecord
   after_create :generate_avatar
 
   def generate_jwt
-    JWT.encode(
+    token = JWT.encode(
       { 
         id: id, 
         email: email,
@@ -35,6 +35,8 @@ class User < ApplicationRecord
       },
       Rails.application.credentials.secret_key_base
     )
+
+    token
   end
 
   def attributes

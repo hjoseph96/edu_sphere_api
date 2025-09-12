@@ -41,7 +41,7 @@ class PageView < ApplicationRecord
       params: params.to_json,
       referrer: request.referer
     )
-  rescue ActiveRecord::RecordNotUnique
+  rescue
     # Ignore duplicate requests (same request_hash)
     nil
   end
