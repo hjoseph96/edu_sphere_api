@@ -17,31 +17,29 @@ Rails.configuration.to_prepare do
     end
   end
 
-  module ActiveStorage
-    module Attachment
-      module Callbacks
-        extend ActiveSupport::Concern
+  # Define the Callbacks module in a separate namespace to avoid conflicts
+  module ActiveStorageAttachmentCallbacks
+    extend ActiveSupport::Concern
 
-        prepended do
-          after_commit :attachment_created, on: :create
-          after_commit :attachment_changed, on: :update
-          after_commit :attachment_destroyed, on: :destroy
-        end
+    prepended do
+      after_commit :attachment_created, on: :create
+      after_commit :attachment_changed, on: :update
+      after_commit :attachment_destroyed, on: :destroy
+    end
 
-        def attachment_changed
-          record.after_attachment_update(self) if record.respond_to?(:after_attachment_update)
-        end
+    def attachment_changed
+      record.after_attachment_update(self) if record.respond_to?(:after_attachment_update)
+    end
 
-        def attachment_created
-          record.after_attachment_create(self) if record.respond_to?(:after_attachment_create)
-        end
+    def attachment_created
+      record.after_attachment_create(self) if record.respond_to?(:after_attachment_create)
+    end
 
-        def attachment_destroyed
-          record.after_attachment_destroy(self) if record.respond_to?(:after_attachment_destroy)
-        end
-      end
+    def attachment_destroyed
+      record.after_attachment_destroy(self) if record.respond_to?(:after_attachment_destroy)
     end
   end
 
-  ActiveStorage::Attachment.prepend ActiveStorage::Attachment::Callbacks
+  # Prepend the Callbacks module to the existing Attachment class
+  ActiveStorage::Attachment.prepend ActiveStorageAttachmentCallbacks
 end
